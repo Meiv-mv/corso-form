@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheda di Presentazione</title>
+
+
+    <!-- Font: Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap + CSS Base -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<main>
+    <h1>Marco Verrone</h1>
+    <p>Mi chiamo Marco Verrone, ho 23 anni e studio sviluppo web. Sono particolarmente interessato
+        al lato frontend e allo sviluppo di applicazioni con React.js</p>
+
+    <div>
+        <h2>Hobbies</h2>
+        <ul>
+            <li>Suonare la chitarra</li>
+            <li>Leggere manga</li>
+            <li>Giocare ai videogiochi</li>
+        </ul>
+    </div>
+
+    <img src="/img/e47260c4-5e44-4e5f-abe8-58e9f5aa9736.jpg" alt="immagine personale">
+
+    <div>
+        <h2>Contattami</h2>
+        <div class="contact-box">
+            <form action="">
+                <br>
+                <label for="text">Scrivimi</label>
+                <textarea name="text" id="text" cols="30" rows="10"></textarea>
+                <br>
+
+                <label for="fname">Nome:</label>
+                <input type="text" id="fname" name="firstname">
+                <br>
+
+                <label for="lname">Cognome:</label>
+                <input type="text" id="lname" name="lastname">
+                <br>
+
+                <label for="email">Email</label>
+                <input type="text" id="email" name="email">
+                <br>
+
+
+                <input class="btn btn-primary" type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+
+
+    <div>
+        <h2>Informazioni</h2>
+        <ul class="info-box" id="bio-info">
+            <li>Nome:Marco</li>
+            <li>Cognome:Verrone</li>
+            <li>Età:23</li>
+        </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</main>
+
+
+
+</body>
+</html>
