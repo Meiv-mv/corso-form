@@ -36,6 +36,41 @@ main img{
 
 li{
     list-style: none;
+    display: flex;
+    gap: 5px;
+}
+
+.delete-btn{
+    border: none;
+    background-color: red;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    font-size: 14px;
+    transition: all linear 0.5s;
+}
+
+.change-btn{
+    border: none;
+    background-color: lightseagreen;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    transition: all linear 0.5s;
+}
+
+.change-btn img{
+    width: 20px;
+    height: 20px;
+}
+
+.change-btn:hover{
+    background-color: lightblue;
+}
+
+li button:hover{
+    background-color: lightcoral;
 }
 
 .info-box{
