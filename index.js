@@ -4,7 +4,7 @@ const hobbiesBtn = document.getElementById("hobbies-btn");
 const hobbiesContainer = document.getElementById("hobbies-container");
 let hobbiesList = [];
 
-
+// need to add a localstorage
 
 hobbiesBtn.addEventListener("click", (e) => {
     let expValue = "";
@@ -35,8 +35,6 @@ hobbiesBtn.addEventListener("click", (e) => {
             expValue = "none";
     }
 
-    // console.log(expValue);
-
     let hobby = {
         name: inputBar.value,
         exp: `${expValue}`
@@ -45,14 +43,16 @@ hobbiesBtn.addEventListener("click", (e) => {
     hobbiesList.push(hobby);
     inputBar.value = "";
     hobbiesExpBar.value = 50;
-    // console.log(hobbiesList);
-
     hobbiesContainer.innerHTML = "";
 
     hobbiesList.forEach(item => {
+
+        // Forse con i template literal viene piu' snello e pulito, da vedere
+
         let liEl = document.createElement("li");
         liEl.setAttribute("class", "hobby-item");
         let pEl = document.createElement("p");
+        pEl.setAttribute("class", "hobby-name");
         pEl.textContent = item.name;
         let deleteBtnEl = document.createElement("button");
         deleteBtnEl.setAttribute("class", "delete-btn");
@@ -61,7 +61,8 @@ hobbiesBtn.addEventListener("click", (e) => {
         changeBtnEl.setAttribute("class", "change-btn");
         changeBtnEl.innerHTML = `<img src="/img/pencil-svgrepo-com.svg" alt="tasto di modifica">`;
         let expEl = document.createElement("p");
-        expEl.innerHTML = `-${item.exp}`;
+        expEl.setAttribute("class", "hobby-name");
+        expEl.innerHTML = `${item.exp}`;
 
         liEl.appendChild(deleteBtnEl);
         liEl.appendChild(changeBtnEl);
@@ -70,21 +71,60 @@ hobbiesBtn.addEventListener("click", (e) => {
         hobbiesContainer.appendChild(liEl);
     })
 
+    // Delete button function
     const deleteHobbiesBtn = document.querySelectorAll(".delete-btn")
-    for (let i= 0; i < deleteHobbiesBtn.length; i++) {
-        deleteHobbiesBtn[i].addEventListener("click", (e) => {
-            e.preventDefault();
+    deleteHobbiesBtn.forEach(btn => {
+        btn.addEventListener("click", (e) => {
             e.target.closest("li").remove();
         })
-    }
+    })
 
-    const changeHobbiesEl = document.querySelectorAll(".change-btn");
-    for (let i = 0; i < changeHobbiesEl.length; i++) {
-        changeHobbiesEl[i].addEventListener("click", (e) => {
-            e.preventDefault();
+    // Modify hobby button function
+    const changeHobbiesBtn = document.querySelectorAll(".change-btn");
+    // const changeableHobbiesEl = document.querySelectorAll(".hobby-name");
+    // for (let i = 0; i < changeHobbiesEl.length; i++) {
+    //     changeHobbiesEl[i].addEventListener("click", (e) => {
+    //         e.preventDefault();
+    //         console.log("clicked");
+    //         console.log(changeableHobbiesEl);
+    //
+    //         // change setting fuction
+    //         function setChange(i){
+    //             i.classList.add("hobby-changeable");
+    //             i.setAttribute("contenteditable", "true");
+    //         }
+    //
+    //         setChange(changeableHobbiesEl[i]);
+    //         setChange(changeableHobbiesEl[i+1]);
+    //
+    //         changeHobbiesEl[i].classList.add("modify");
+    //     })
+    // }
 
+    changeHobbiesBtn.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            const paragraphValue = e.target.closest("li").querySelectorAll("p")
+            console.log(paragraphValue);
+
+            const input = document.createElement("input");
+            input.type = "text";
+            input.value = paragraphValue[0].innerHTML;
+            input.setAttribute("class", "hobby-changeable")
+
+            const inputExp = document.createElement("input");
+            inputExp.type = "text";
+            inputExp.value = paragraphValue[1].innerHTML;
+            inputExp.setAttribute("class", "hobby-changeable")
+
+            e.target.closest("li").appendChild(input);
+            e.target.closest("li").appendChild(inputExp);
+            btn.classList.add("modify");
+
+            if(btn.classList[1] === "modify"){
+
+            }
         })
-    }
+    })
 })
 
 

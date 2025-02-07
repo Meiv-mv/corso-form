@@ -34,10 +34,21 @@ main img{
     object-fit: cover;
 }
 
+#hobbies-container{
+    width: 100%;
+    padding: 0;
+}
+
 li{
     list-style: none;
+    width: 100%;
+    margin: 5px;
     display: flex;
     gap: 5px;
+}
+
+li p{
+    text-wrap: wrap;
 }
 
 .delete-btn{
@@ -60,6 +71,10 @@ li{
     transition: all linear 0.5s;
 }
 
+.modify{
+    background-color: seagreen;
+}
+
 .change-btn img{
     width: 20px;
     height: 20px;
@@ -69,8 +84,21 @@ li{
     background-color: lightblue;
 }
 
-li button:hover{
+.delete-btn:hover{
     background-color: lightcoral;
+}
+
+.hobby-changeable{
+    background-color: white;
+    border-radius: 10px;
+    border: 1px solid black;
+    padding: 2px;
+    transition: all linear 0.3s;
+}
+
+.hobby-changeable:focus{
+    box-shadow: 2px 2px 2px black;
+    outline: none;
 }
 
 .info-box{
