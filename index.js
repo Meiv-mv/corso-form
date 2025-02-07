@@ -127,5 +127,63 @@ hobbiesBtn.addEventListener("click", (e) => {
     })
 })
 
+// Weather Section
+
+const searchWeatherBar = document.getElementById("weather-bar");
+const errorBox = document.getElementById("error-box");
+const weatherInfoBox = document.getElementById("weather-information");
+const cityName = document.getElementById("city-name");
+const temperature = document.getElementById("temperature");
+const humidity = document.getElementById("humidity");
+const windSpeed = document.getElementById("wind-speed");
+const weatherDescription = document.getElementById("weather-description");
+
+function searchWeather() {
+    const apiKey = "e22084dc16b09ad59917b9a99d7e29e6"
+    let city = searchWeatherBar.value;
+
+    if (searchWeatherBar.value === "") {
+        return;
+    }
+
+    searchWeatherBar.value = "";
+
+    // const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric}`)
+    //
+    // if (!response.ok) {
+    //     return (
+    //         errorBox.style.display = "block",
+    //         weatherInfoBox.style.display = "none"
+    //     )
+    // }
+
+
+
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
+        // .then(res => res.json())
+    .then(async response => {
+
+        let json = await response.json();
+        console.log(json.cod);
+
+        if (json.cod !== 200){
+            errorBox.style.display = "block";
+            weatherInfoBox.style.display = "none";
+        }
+        else {
+            cityName.innerHTML = city;
+            temperature.innerHTML = `${parseInt(json.main.temp)}°C`;
+            humidity.innerHTML = `${json.main.humidity}%`;
+            windSpeed.innerHTML = `${json.wind.speed}m/s`;
+            weatherDescription.innerHTML = json.weather[0].description;
+        }
+
+
+    })
+    // .catch(error => {
+    //         errorBox.display.style = "block";
+    //         weatherInfoBox.display.style = "none";
+    // })
+}
 
 
