@@ -27,21 +27,13 @@ const gridOptions = {
 
                 btn.addEventListener("click", function (e) {
                     console.log("clicked");
-                    deleteHobby();
-                    deleteRow();
-                    getSelectedRows();
                 })
 
                 return btn;
             },
             flex: 1
         }
-    ],
-    rowSelection: 'single',
-    onGridReady: (params) => {
-        gridOptions.api = params.api;
-        gridOptions.columnApi = params.columnApi;
-    }
+    ]
 }
 
 const myGridElement = document.querySelector('#myGrid');
@@ -111,17 +103,10 @@ hobbiesBtn.addEventListener("click", (e) => {
 })
 
 // Delete the hobby from the array
-function deleteHobby() {
 
-}
 
 // Delete the row
-function deleteRow() {
-    const selectedRow = gridOptions.api.getSelectedNodes()[0]
-    if (selectedRow) {
-        gridOptions.api.applyTransaction({ remove: [selectedRow.data] });
-    }
-}
+
 
 // Weather Section
 
