@@ -1,10 +1,53 @@
 const inputBar = document.getElementById("hobbies-bar");
 const hobbiesExpBar = document.getElementById("hobbies-exp-bar");
 const hobbiesBtn = document.getElementById("hobbies-btn");
-const hobbiesContainer = document.getElementById("hobbies-container");
+// const hobbiesContainer = document.getElementById("hobbies-container");
 let hobbiesList = [];
 
 // need to add a localstorage
+
+// AG-Grid
+
+const gridOptions = {
+    rowData:[
+        {hobby: "Suonare la chitarra", esperienza: "Eccellente"},
+        {hobby: "Cucinare", esperienza: "Buona"},
+        {hobby: "Programmare", esperienza: "Base"}
+    ],
+    columnDefs: [
+        {field: "hobby", editable: true, flex: 3},
+        {field: "esperienza", editable: true, flex: 2},
+        {field: "",
+            cellRenderer: function () {
+                let btn = document.createElement("button");
+                btn.innerHTML = "Elimina";
+                btn.classList.add("btn");
+                btn.classList.add("btn-danger");
+                btn.value = ``;
+
+                btn.addEventListener("click", function (e) {
+                    console.log("clicked");
+                    deleteHobby();
+                    deleteRow();
+                    getSelectedRows();
+                })
+
+                return btn;
+            },
+            flex: 1
+        }
+    ],
+    rowSelection: 'single',
+    onGridReady: (params) => {
+        gridOptions.api = params.api;
+        gridOptions.columnApi = params.columnApi;
+    }
+}
+
+const myGridElement = document.querySelector('#myGrid');
+agGrid.createGrid(myGridElement, gridOptions);
+
+// Hobby Section
 
 hobbiesBtn.addEventListener("click", (e) => {
     let expValue = "";
@@ -41,91 +84,44 @@ hobbiesBtn.addEventListener("click", (e) => {
     }
 
     hobbiesList.push(hobby);
-    inputBar.value = "";
-    hobbiesExpBar.value = 50;
-    hobbiesContainer.innerHTML = "";
+    console.log(hobbiesList);
+    console.log(gridOptions.rowData);
 
-    hobbiesList.forEach(item => {
+    function renderList() {
+        inputBar.value = "";
+        hobbiesExpBar.value = 50;
+        myGridElement.innerHTML = "";
+        let array = [];
+        gridOptions.rowData = [];
 
-        // Forse con i template literal viene piu' snello e pulito, da vedere
-
-        let liEl = document.createElement("li");
-        liEl.setAttribute("class", "hobby-item");
-        let pEl = document.createElement("p");
-        pEl.setAttribute("class", "h4");
-        pEl.innerHTML = `${item.name}/`;
-        let deleteBtnEl = document.createElement("button");
-        deleteBtnEl.setAttribute("class", "btn btn-danger rounded-circle");
-        deleteBtnEl.textContent = "x";
-        let changeBtnEl = document.createElement("button");
-        changeBtnEl.setAttribute("class", "btn btn-primary rounded");
-        changeBtnEl.innerHTML = `Modifica`;
-        let expEl = document.createElement("p");
-        expEl.setAttribute("class", "h4");
-        expEl.innerHTML = `Livello: ${item.exp}`;
-
-        liEl.appendChild(changeBtnEl);
-        liEl.appendChild(deleteBtnEl);
-        liEl.appendChild(pEl);
-        liEl.appendChild(expEl);
-        hobbiesContainer.appendChild(liEl);
-    })
-
-    // Delete button function
-    const deleteHobbiesBtn = document.querySelectorAll(".delete-btn")
-    deleteHobbiesBtn.forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            e.target.closest("li").remove();
-        })
-    })
-
-    // Modify hobby button function
-    const changeHobbiesBtn = document.querySelectorAll(".change-btn");
-    // const changeableHobbiesEl = document.querySelectorAll(".hobby-name");
-    // for (let i = 0; i < changeHobbiesEl.length; i++) {
-    //     changeHobbiesEl[i].addEventListener("click", (e) => {
-    //         e.preventDefault();
-    //         console.log("clicked");
-    //         console.log(changeableHobbiesEl);
-    //
-    //         // change setting fuction
-    //         function setChange(i){
-    //             i.classList.add("hobby-changeable");
-    //             i.setAttribute("contenteditable", "true");
-    //         }
-    //
-    //         setChange(changeableHobbiesEl[i]);
-    //         setChange(changeableHobbiesEl[i+1]);
-    //
-    //         changeHobbiesEl[i].classList.add("modify");
-    //     })
-    // }
-
-    changeHobbiesBtn.forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            const paragraphValue = e.target.closest("li").querySelectorAll("p")
-            console.log(paragraphValue);
-
-            const input = document.createElement("input");
-            input.type = "text";
-            input.value = paragraphValue[0].innerHTML;
-            input.setAttribute("class", "hobby-changeable")
-
-            const inputExp = document.createElement("input");
-            inputExp.type = "text";
-            inputExp.value = paragraphValue[1].innerHTML;
-            inputExp.setAttribute("class", "hobby-changeable")
-
-            e.target.closest("li").appendChild(input);
-            e.target.closest("li").appendChild(inputExp);
-            btn.classList.add("modify");
-
-            if(btn.classList[1] === "modify"){
-
+        hobbiesList.forEach(hobby => {
+            let hobbyItem = {
+                hobby: hobby.name,
+                esperienza: hobby.exp
             }
+
+            array.push(hobbyItem);
         })
-    })
+
+        gridOptions.rowData = array;
+        agGrid.createGrid(myGridElement, gridOptions);
+    }
+
+    renderList();
 })
+
+// Delete the hobby from the array
+function deleteHobby() {
+
+}
+
+// Delete the row
+function deleteRow() {
+    const selectedRow = gridOptions.api.getSelectedNodes()[0]
+    if (selectedRow) {
+        gridOptions.api.applyTransaction({ remove: [selectedRow.data] });
+    }
+}
 
 // Weather Section
 

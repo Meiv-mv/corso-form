@@ -161,3 +161,9 @@
     vertical-align: middle;
 }
 
+#myGrid .btn{
+    height: 30px;
+    width: 70px;
+    padding: 5px;
+}
+
