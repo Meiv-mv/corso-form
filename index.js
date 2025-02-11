@@ -1,8 +1,8 @@
+// Hobby Section
+
 const inputBar = document.getElementById("hobbies-bar");
 const hobbiesExpBar = document.getElementById("hobbies-exp-bar");
 const hobbiesBtn = document.getElementById("hobbies-btn");
-// const hobbiesContainer = document.getElementById("hobbies-container");
-let hobbiesList = [];
 
 // need to add a localstorage
 
@@ -15,98 +15,73 @@ const gridOptions = {
         {hobby: "Programmare", esperienza: "Base"}
     ],
     columnDefs: [
-        {field: "hobby", editable: true, flex: 3},
-        {field: "esperienza", editable: true, flex: 2},
+        {field: "hobby", editable: true, filter: true, flex: 3},
+        {field: "esperienza", editable: true, filter: true, flex: 2},
         {field: "",
-            cellRenderer: function () {
+            cellRenderer: function (params) {
                 let btn = document.createElement("button");
-                btn.innerHTML = "Elimina";
+                btn.innerHTML = "X";
                 btn.classList.add("btn");
                 btn.classList.add("btn-danger");
-                btn.value = ``;
+                btn.classList.add("rounded-circle");
 
                 btn.addEventListener("click", function (e) {
-                    console.log("clicked");
+                    deleteRow(params);
                 })
 
                 return btn;
             },
             flex: 1
         }
-    ]
+    ],
+    onGridReady: (params) => {
+        gridOptions.api = params.api;
+    },
+    onFirstDataRendered: (params) => {
+        gridOptions.api = params.api;
+    }
 }
 
 const myGridElement = document.querySelector('#myGrid');
 agGrid.createGrid(myGridElement, gridOptions);
 
-// Hobby Section
+// Hobby Event Section
 
 hobbiesBtn.addEventListener("click", (e) => {
+    if (inputBar.value === ""){
+        window.alert("Inserire un hobby!");
+        return;
+    }
+
     let expValue = "";
     let x = hobbiesExpBar.value;
-    switch (true) {
-        case (x < 5):
-            expValue = "Zero Esperienza";
-            break;
-        case (x < 20):
-            expValue = "Bassa";
-            break;
-        case (x < 40):
-            expValue = "Base";
-            break;
-        case (x < 60):
-            expValue = "Buona";
-            break;
-        case(x < 75):
-            expValue = "Ottima";
-            break;
-        case (x <= 90):
-            expValue = "Eccellente";
-            break;
-        case (x > 90):
-            expValue = "Esperto";
-            break;
-        default:
-            expValue = "none";
+    switch (x) {
+        case 0: expValue = "Neofita"; break;
+        case 1: expValue = "Bassa"; break;
+        case 2: expValue = "Base"; break;
+        case 3: expValue = "Buona"; break;
+        case 4: expValue = "Ottima"; break;
+        case 5: expValue = "Eccellente"; break;
+        case 6: expValue = "Esperto"; break;
+        default: expValue = "Nessuna";
     }
 
-    let hobby = {
-        name: inputBar.value,
-        exp: `${expValue}`
-    }
+    let newHobby = {hobby: inputBar.value, esperienza: expValue}
+    gridOptions.rowData.push({hobby: inputBar.value, esperienza: expValue});
+    gridOptions.api.applyTransaction({ add: [newHobby] });
 
-    hobbiesList.push(hobby);
-    console.log(hobbiesList);
-    console.log(gridOptions.rowData);
-
-    function renderList() {
-        inputBar.value = "";
-        hobbiesExpBar.value = 50;
-        myGridElement.innerHTML = "";
-        let array = [];
-        gridOptions.rowData = [];
-
-        hobbiesList.forEach(hobby => {
-            let hobbyItem = {
-                hobby: hobby.name,
-                esperienza: hobby.exp
-            }
-
-            array.push(hobbyItem);
-        })
-
-        gridOptions.rowData = array;
-        agGrid.createGrid(myGridElement, gridOptions);
-    }
-
-    renderList();
+    inputBar.value = "";
+    hobbiesExpBar.value = 50;
 })
 
-// Delete the hobby from the array
-
-
 // Delete the row
+function deleteRow(params){
+    gridOptions.rowData = gridOptions.rowData.filter(row => Object.keys(row).some(key => row[key] !== params.node.data[key]));
 
+    gridOptions.api.applyTransaction({
+        remove: [params.node.data]
+    });
+}
 
 // Weather Section
 
@@ -126,6 +101,7 @@ function searchWeather() {
     let city = searchWeatherBar.value;
 
     if (searchWeatherBar.value === "") {
+        alert("Inserire il nome di una città!");
         return;
     }
 
@@ -150,8 +126,35 @@ function searchWeather() {
             humidity.innerHTML = `${json.main.humidity}%`;
             windSpeed.innerHTML = `${json.wind.speed}m/s`;
             weatherDescription.innerHTML = json.weather[0].description;
+
+            updateMap(json.coord.lat, json.coord.lon, city)
         }
+
     })
+}
+
+// Leaflet
+let map ;
+let marker ;
+
+function initMap(lat, lon, cityName) {
+    map = L.map('map').setView([lat, lon], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '&copy; OpenStreetMap contributors'}).addTo(map);
+
+    marker = L.marker([lat, lon]).addTo(map)
+        .bindPopup(`<b>${cityName}</b>`)
+        .openPopup();
+}
+
+initMap(40.8333, 14.25, "Napoli");
+
+function updateMap(lat, lon, cityName) {
+    map.setView([lat, lon], 13);
+
+    marker.setLatLng([lat, lon])
+        .setPopupContent(`<b>${cityName}</b>`)
+        .openPopup();
 }
 
 
