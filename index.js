@@ -55,14 +55,14 @@ hobbiesBtn.addEventListener("click", (e) => {
 
     let expValue = "";
     let x = hobbiesExpBar.value;
-    switch (x) {
-        case 0: expValue = "Neofita"; break;
-        case 1: expValue = "Bassa"; break;
-        case 2: expValue = "Base"; break;
-        case 3: expValue = "Buona"; break;
-        case 4: expValue = "Ottima"; break;
-        case 5: expValue = "Eccellente"; break;
-        case 6: expValue = "Esperto"; break;
+    switch (true) {
+        case (x == 0): expValue = "Neofita"; break;
+        case (x == 1): expValue = "Bassa"; break;
+        case (x == 2): expValue = "Base"; break;
+        case (x == 3): expValue = "Buona"; break;
+        case (x == 4): expValue = "Ottima"; break;
+        case (x == 5): expValue = "Eccellente"; break;
+        case (x == 6): expValue = "Esperto"; break;
         default: expValue = "Nessuna";
     }
 
@@ -71,7 +71,7 @@ hobbiesBtn.addEventListener("click", (e) => {
     gridOptions.api.applyTransaction({ add: [newHobby] });
 
     inputBar.value = "";
-    hobbiesExpBar.value = 50;
+    hobbiesExpBar.value = 0;
 })
 
 // Delete the row
