@@ -44,30 +44,72 @@
     </nav>
 
     <main class="container-lg text-center">
-        <div class="row g-lg-4">
-
-            <!-- BIO -->
-            <div style="background-color: darkslategrey; color: whitesmoke; height: 100%;" class="col-12 col-lg-8" id="bio-section">
-                <div class="row align-items-center">
-                    <div class="col-5">
-                        <img class="img-fluid img-thumbnail rounded-circle"
-                             style="width: 150px; height: 150px; object-fit: cover; object-position: center;"
-                             src="/img/e47260c4-5e44-4e5f-abe8-58e9f5aa9736.jpg"
-                             alt="immagine personale">
+        <div class="row">
+            <div class="col-12 col-lg-8">
+                <div class="row g-lg-3">
+                    <!-- BIO -->
+                    <div style="background-color: darkslategrey; color: whitesmoke; height: 100%;" class="col-12" id="bio-section">
+                        <div class="row align-items-center">
+                            <div class="col-5">
+                                <img class="img-fluid img-thumbnail rounded-circle"
+                                     style="width: 150px; height: 150px; object-fit: cover; object-position: center;"
+                                     src="/img/e47260c4-5e44-4e5f-abe8-58e9f5aa9736.jpg"
+                                     alt="immagine personale">
+                            </div>
+                            <div class="col">
+                                <h1>Marco Verrone, 23</h1>
+                                <p>
+                                    Aspirante sviluppatore web.
+                                    Ho tante passioni come la musica, il gaming, guardare anime, leggere manga e l'informatica.
+                                    Attualmente sto studiando in particolare lo sviluppo front-end con tecnologie come Bootstrap, Javascript e, a breve, React.
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col">
-                        <h1>Marco Verrone, 23</h1>
-                        <p>
-                            Aspirante sviluppatore web.
-                            Ho tante passioni come la musica, il gaming, guardare anime, leggere manga e l'informatica.
-                            Attualmente sto studiando in particolare lo sviluppo front-end con tecnologie come Bootstrap, Javascript e, a breve, React.
-                        </p>
+
+                    <!-- Hobby Section -->
+                    <div style="background-color: darkslategrey; color: whitesmoke" class="col-12">
+                        <div class="row">
+                            <div class="col-12">
+                                <h2 id="hobby-section">Hobby</h2>
+                            </div>
+                            <div class="col-12">
+                                <div class="row align-items-center">
+                                    <div class="col-12 col-md-10">
+                                        <div class="row gy-2">
+                                            <div class="col-12">
+                                                <input type="text" class="form-control" name="hobbies-bar" id="hobbies-bar">
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-2" style="padding: 0px;">
+                                                        Neofita
+                                                    </div>
+                                                    <div class="col-8" style="padding: 0px;">
+                                                        <input type="range" class="form-range" name="hobbies-exp-bar" id="hobbies-exp-bar" min="0" max="6">
+                                                    </div>
+                                                    <div class="col-2" style="padding: 0px;">
+                                                        Esperto
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-2">
+                                        <button type="button" class="btn btn-outline-info rounded-circle" id="hobbies-btn">+</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div id="myGrid" style="height: 300px; margin: 5px; width: 100%;"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Weather Section -->
-            <div style="background-color: darkslategrey; color: whitesmoke" class="col-12 col-lg-3 offset-lg-1">
+            <div style="background-color: darkslategrey; color: whitesmoke; height: 100%; padding: 5px;" class="col-12 col-lg-4">
                 <div class="row">
                     <div class="col-12">
                         <h2 id="weather-section">Meteo</h2>
@@ -90,7 +132,7 @@
                         <p>Meteo: <span  id="weather-description">-</span> </p>
                     </div>
                     <div class="col-12">
-                        <div id="map" style="height: 200px; width: 100%;"></div>
+                        <div id="map" style="height: 250px; width: 100%;"></div>
                     </div>
                     <div class="col-12" id="error-box">
                         <p>Errore! Controlla di aver inserito correttamente il nome della città.</p>
@@ -98,73 +140,34 @@
                 </div>
             </div>
 
-            <!-- Hobby Section -->
-            <div style="background-color: darkslategrey; color: whitesmoke" class="col-12 col-lg-8">
-                <div class="row">
-                    <div class="col-12">
-                        <h2 id="hobby-section">Hobby</h2>
-                    </div>
-                    <div class="col-12">
-                        <div class="row align-items-center">
-                            <div class="col-12 col-md-10">
-                                <div class="row gy-2">
-                                    <div class="col-12">
-                                        <input type="text" class="form-control" name="hobbies-bar" id="hobbies-bar">
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="row">
-                                            <div class="col-2" style="padding: 0px;">
-                                                Neofita
-                                            </div>
-                                            <div class="col-8" style="padding: 0px;">
-                                                <input type="range" class="form-range" name="hobbies-exp-bar" id="hobbies-exp-bar" min="0" max="6">
-                                            </div>
-                                            <div class="col-2" style="padding: 0px;">
-                                                Esperto
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-2">
-                                <button type="button" class="btn btn-outline-info rounded-circle" id="hobbies-btn">+</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div id="myGrid" style="height: 300px; margin: 5px; width: 100%;"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Contact Form Section -->
-            <div style="background-color: darkslategrey; color: whitesmoke" class="col-12 col-lg-8">
-                <div class="row g-3">
-                    <div class="col-12">
-                        <h2 id="contact-section">Contattami</h2>
-                    </div>
-                    <div class="col-6">
-                        <input class="form-control" type="text" id="fname" placeholder="Nome">
-                    </div>
-                    <div class="col-6">
-                        <input class="form-control" type="text" id="lname" placeholder="Cognome">
-                    </div>
-                    <div class="col-8">
-                        <input class="form-control" type="text" id="email" placeholder="Email">
-                    </div>
-                    <div class="col-10">
-                        <textarea class="form-control" name="message" id="message" cols="30" rows="10" placeholder="Scrivi qui..."></textarea>
-                    </div>
-                    <div class="col-12">
-                        <submit class="btn btn-outline-info mb-2">Invia</submit>
-                    </div>
-                </div>
-            </div>
         </div>
     </main>
 
-    <!-- Da creare il footer -->
-    <footer></footer>
+    <!-- Footer -->
+    <footer class="container-fluid" style="background-color: rgb(33, 37, 41); color: whitesmoke; margin-top: 10px;">
+        <!-- Contact Form Section -->
+        <div class="row g-3">
+            <div class="col-12">
+                <h2 id="contact-section">Contattami</h2>
+            </div>
+            <div class="col-6">
+                <input class="form-control" type="text" id="fname" placeholder="Nome">
+            </div>
+            <div class="col-6">
+                <input class="form-control" type="text" id="lname" placeholder="Cognome">
+            </div>
+            <div class="col-8">
+                <input class="form-control" type="text" id="email" placeholder="Email">
+            </div>
+            <div class="col-10">
+                <textarea class="form-control" name="message" id="message" cols="30" rows="10" placeholder="Scrivi qui..."></textarea>
+            </div>
+            <div class="col-12">
+                <submit class="btn btn-outline-info mb-2">Invia</submit>
+            </div>
+        </div>
+
+    </footer>
 
 
     <!-- Leaflet -->
