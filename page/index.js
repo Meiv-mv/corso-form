@@ -93,11 +93,11 @@ const temperature = document.getElementById("temperature");
 const humidity = document.getElementById("humidity");
 const windSpeed = document.getElementById("wind-speed");
 const weatherDescription = document.getElementById("weather-description");
+const apiKey = "e22084dc16b09ad59917b9a99d7e29e6"
 
 errorBox.style.display = "none";
 
 function searchWeather() {
-    const apiKey = "e22084dc16b09ad59917b9a99d7e29e6"
     let city = searchWeatherBar.value;
 
     if (searchWeatherBar.value === "") {
@@ -157,4 +157,80 @@ function updateMap(lat, lon, cityName) {
         .openPopup();
 }
 
+// WebSocket Data
 
+const realtimeEl = document.getElementById("realtime");
+const realtimeBtn = document.getElementById("realtime-btn");
+const stopRealtimeBtn = document.getElementById("stop-realtime-btn");
+const realtimeUrl = "http://localhost:3000/realtime";
+const historyUrl = "http://localhost:3000/history";
+let stop = false;
+
+stopRealtimeBtn.style.display = "none";
+
+// realtime call
+
+async function callRealtime(){
+    if (stop) return;
+    let response = await fetch(realtimeUrl);
+    let json = await response.json();
+    realtimeEl.innerHTML = `
+    <p>Temperatura: ${parseInt(json.realtime.temperature)}°</p>
+    <p>Umidità: ${parseInt(json.realtime.humidity)}%</p>
+    <p>Pressione: ${parseInt(json.realtime.pressure)} hPA</p>
+    <p>Data: ${json.realtime.time}</p>`;
+
+    setTimeout(callRealtime, 30000);
+}
+
+realtimeBtn.addEventListener("click", () => {
+    stop = false;
+    callRealtime();
+    stopRealtimeBtn.style.display = "";
+    realtimeBtn.style.display = "none";
+});
+
+function stopRealtime(){
+    stop = true;
+    stopRealtimeBtn.style.display = "none";
+    realtimeBtn.style.display = "";
+}
+
+stopRealtimeBtn.addEventListener("click", () => {
+    stopRealtime();
+})
+
+
+
+// history call
+
+async function callHistory() {
+    let response = await fetch(historyUrl);
+    let json = await response.json();
+    const modal = document.createElement("div");
+    modal.classList.add("modal");
+    modal.setAttribute("tabindex", "-1");
+    modal.innerHTML = `
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Storico</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul> ${displayHistory(json.history)} </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>`;
+
+    document.body.appendChild(modal)
+    let bootstrapModal = new bootstrap.Modal(modal);
+    bootstrapModal.show();
+}
+
+function displayHistory (array) {
+    return array.map(item => `<li>Temperatura: ${item.temperature}°, Umidità: ${item.humidity}%, Pressione: ${item.pressure} hPA, Data: ${item.time}</li>`).join("");
+}

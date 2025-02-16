@@ -9,23 +9,30 @@ const fs = require('fs');
 // app.use(express.json());
 app.use(express.static('page'));
 
-
-
 // GET
 
 app.get('/', function (req, res) {
     res.render("index.html");
 })
 
-app.get('/main', async (req, res) => {
+// Realtime API
+app.get('/realtime', async (req, res) => {
     let realtimeFile = JSON.parse(await readRealtime());
-    let historyFile = await readHistory();
-    const main = {
-        realtime: realtimeFile,
+    const data = {
+        realtime: realtimeFile
+    };
+
+    res.send(data);
+})
+
+// History API
+app.get('/history', async (req, res) => {
+    let historyFile = JSON.parse(await readHistory());
+    const data = {
         history : historyFile
     };
 
-    res.send(main);
+    res.send(data);
 })
 
 app.listen(3000);
@@ -44,7 +51,7 @@ ws.onmessage = async (event) => {
     let stringObj = JSON.stringify(obj);
 
     realtimeFs(stringObj);
-    historyFs(stringObj);
+    historyFs(obj);
 }
 
 async function readRealtime() {
@@ -53,7 +60,7 @@ async function readRealtime() {
 }
 
 async function readHistory() {
-    let file = fs.readFileSync('history.txt', 'utf8');
+    let file = fs.readFileSync('history.json', 'utf8');
     return file
 }
 
@@ -62,11 +69,15 @@ function realtimeFs (wsData) {
 }
 
 function historyFs(wsData) {
-    let file = `${wsData} \n`
-
-    fs.appendFile("history.txt", file, "utf8", () => {})
+    // let file = `${wsData} \n`
+    //
+    // fs.appendFile("history.txt", file, "utf8", () => {})
+    fs.readFile("history.json", "utf8", (err, data) => {
+        let array = JSON.parse(data);
+        array.push(wsData);
+        if (array.length > 30) {
+            array.splice(0, 1);
+        }
+        fs.writeFile("history.json", JSON.stringify(array, null, 2), "utf8", () => {});
+    })
 }
-
-
-
-

@@ -17,8 +17,8 @@
 
 </head>
 <body style="background-color: rgb(33, 37, 41); height: 1250px;">
-
-    <nav class="navbar navbar-dark navbar-expand-lg sticky-top bg-body-tertiary" data-bs-theme="dark">
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-body-tertiary" data-bs-theme="dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Menu</a>
             <button class="navbar-toggler text-info" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,15 +36,20 @@
                         <a class="nav-link" href="#weather-section">Meteo</a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link" href="#contact-section">Contatti</a>
+                    <a class="nav-link" href="#websocket-section">Dati Websocket</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact-section">Contatti</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
+    <!-- Main Section -->
     <main class="container-lg text-center">
         <div class="row">
+            <!-- Main column -->
             <div class="col-12 col-lg-8">
                 <div class="row g-lg-3">
                     <!-- BIO -->
@@ -108,36 +113,59 @@
                 </div>
             </div>
 
-            <!-- Weather Section -->
-            <div style="background-color: darkslategrey; color: whitesmoke; height: 100%; padding: 5px;" class="col-12 col-lg-4">
-                <div class="row">
-                    <div class="col-12">
-                        <h2 id="weather-section">Meteo</h2>
-                    </div>
-                    <div class="col-12">
-                        <div class="row justify-content-center">
-                            <div class="col-7">
-                                <input type="text" name="weather-search-bar" class="form-control" id="weather-bar">
+            <!-- Side column -->
+            <div style="color: whitesmoke;" class="col-12 col-lg-4">
+                <div class="row g-lg-3">
+                    <!-- Weather Section -->
+                    <div class="col-12" style="padding: 5px; background-color: darkslategrey;">
+                        <div class="row">
+                            <div class="col-12">
+                                <h2 id="weather-section">Meteo</h2>
                             </div>
-                            <div class="col-3">
-                                <button class="btn btn-outline-info" id="search-weather-btn" onclick="searchWeather()">Cerca</button>
+                            <div class="col-12">
+                                <div class="row justify-content-center">
+                                    <div class="col-7">
+                                        <input type="text" name="weather-search-bar" class="form-control" id="weather-bar">
+                                    </div>
+                                    <div class="col-3">
+                                        <button class="btn btn-outline-info" id="search-weather-btn" onclick="searchWeather()">Cerca</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12" id="weather-information">
+                                <p>Città: <span id="city-name">-</span></p>
+                                <p>Temperatura : <span id="temperature">-</span></p>
+                                <p>Umidità: <span id="humidity">-</span> </p>
+                                <p>Vento: <span  id="wind-speed">-</span> </p>
+                                <p>Meteo: <span  id="weather-description">-</span> </p>
+                            </div>
+                            <div class="col-12" id="error-box">
+                                <p>Errore! Controlla di aver inserito correttamente il nome della città.</p>
+                            </div>
+                            <div class="col-12">
+                                <div id="map" style="height: 250px; width: 100%;"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12" id="weather-information">
-                        <p>Città: <span id="city-name">-</span></p>
-                        <p>Temperatura : <span id="temperature">-</span></p>
-                        <p>Umidità: <span id="humidity">-</span> </p>
-                        <p>Vento: <span  id="wind-speed">-</span> </p>
-                        <p>Meteo: <span  id="weather-description">-</span> </p>
-                    </div>
-                    <div class="col-12" id="error-box">
-                        <p>Errore! Controlla di aver inserito correttamente il nome della città.</p>
-                    </div>
-                    <div class="col-12">
-                        <div id="map" style="height: 250px; width: 100%;"></div>
+
+                    <!-- WebSocket Data -->
+                    <div class="col-12" style="padding: 5px; background-color: darkslategrey;">
+                        <div class="row gy-2">
+                            <div class="col-12">
+                                <h2 id="websocket-section">Dati WebSocket</h2>
+                            </div>
+                            <div class="col-12" id="realtime">
+                            </div>
+                            <div class="col-12">
+                                <button type="button" class="btn btn-outline-info" id="realtime-btn">Dati Realtime</button>
+                                <button type="button" class="btn btn-outline-danger" id="stop-realtime-btn">Stop</button>
+                                <button type="button" class="btn btn-outline-info" onclick="callHistory()">Controlla Storico</button>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
+
             </div>
 
         </div>
