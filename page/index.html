@@ -47,7 +47,7 @@
     </nav>
 
     <!-- Main Section -->
-    <main class="container-lg text-center">
+    <main class="container-lg text-center" style="margin-top: 56px;">
         <div class="row">
             <!-- Main column -->
             <div class="col-12 col-lg-8">
@@ -118,7 +118,7 @@
                 <div class="row g-lg-3">
                     <!-- Weather Section -->
                     <div class="col-12" style="padding: 5px; background-color: darkslategrey;">
-                        <div class="row">
+                        <div class="row gy-2">
                             <div class="col-12">
                                 <h2 id="weather-section">Meteo</h2>
                             </div>
@@ -133,11 +133,14 @@
                                 </div>
                             </div>
                             <div class="col-12" id="weather-information">
-                                <p>Città: <span id="city-name">-</span></p>
-                                <p>Temperatura : <span id="temperature">-</span></p>
-                                <p>Umidità: <span id="humidity">-</span> </p>
-                                <p>Vento: <span  id="wind-speed">-</span> </p>
-                                <p>Meteo: <span  id="weather-description">-</span> </p>
+                                <p id="city-name">Città: -</p>
+                                <p id="temperature">Temperatura: -</p>
+                                <p id="humidity">Umidità: -</p>
+                                <p id="wind-speed">Vento: -</p>
+                                <p id="weather-description">Meteo: -</p>
+                            </div>
+                            <div class="col-12" id="loading-box">
+                                <p>Sto caricando le informazioni sul meteo...</p>
                             </div>
                             <div class="col-12" id="error-box">
                                 <p>Errore! Controlla di aver inserito correttamente il nome della città.</p>

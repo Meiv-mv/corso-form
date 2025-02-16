@@ -87,6 +87,7 @@ function deleteRow(params){
 
 const searchWeatherBar = document.getElementById("weather-bar");
 const errorBox = document.getElementById("error-box");
+const loadingBox = document.getElementById("loading-box");
 const weatherInfoBox = document.getElementById("weather-information");
 const cityName = document.getElementById("city-name");
 const temperature = document.getElementById("temperature");
@@ -95,9 +96,11 @@ const windSpeed = document.getElementById("wind-speed");
 const weatherDescription = document.getElementById("weather-description");
 const apiKey = "e22084dc16b09ad59917b9a99d7e29e6"
 
+loadingBox.style.display = "none";
 errorBox.style.display = "none";
+weatherInfoBox.style.display = "none";
 
-function searchWeather() {
+async function searchWeather() {
     let city = searchWeatherBar.value;
 
     if (searchWeatherBar.value === "") {
@@ -106,31 +109,38 @@ function searchWeather() {
     }
 
     searchWeatherBar.value = "";
+    loadingBox.style.display = "block";
+    weatherInfoBox.style.display = "none";
+    errorBox.style.display = "none";
 
-    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=it`)
-        // .then(res => res.json())
-    .then(async response => {
 
+    try {
+        let response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=it`);
         let json = await response.json();
 
-        if (json.cod !== 200){
-            errorBox.style.display = "block";
-            weatherInfoBox.style.display = "none";
-        }
-        else {
-            weatherInfoBox.style.display = "block";
-            errorBox.style.display = "none";
+        if (!response.ok){
+            throw new Error(response.statusText);
+        } else{
 
-            cityName.innerHTML = city;
-            temperature.innerHTML = `${parseInt(json.main.temp)}°C`;
-            humidity.innerHTML = `${json.main.humidity}%`;
-            windSpeed.innerHTML = `${json.wind.speed}m/s`;
-            weatherDescription.innerHTML = json.weather[0].description;
+            setTimeout(() => {
+                weatherInfoBox.style.display = "block";
+                errorBox.style.display = "none";
+                loadingBox.style.display = "none";
+
+                cityName.innerHTML = `Città: ${json.name}`;
+                temperature.innerHTML = `Temperatura: ${parseInt(json.main.temp)}°C`;
+                humidity.innerHTML = `Umidità: ${json.main.humidity}%`;
+                windSpeed.innerHTML = `Vento: ${json.wind.speed}m/s`;
+                weatherDescription.innerHTML = `Meteo: ${json.weather[0].description}`;
+            }, 500)
 
             updateMap(json.coord.lat, json.coord.lon, city)
         }
-
-    })
+    } catch (err){
+        errorBox.style.display = "block";
+        weatherInfoBox.style.display = "none";
+        loadingBox.style.display = "none";
+    }
 }
 
 // Leaflet
@@ -212,15 +222,15 @@ async function callHistory() {
     modal.setAttribute("tabindex", "-1");
     modal.innerHTML = `
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header border-secondary">
                 <h5 class="modal-title">Storico</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <ul> ${displayHistory(json.history)} </ul>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer border-secondary">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
