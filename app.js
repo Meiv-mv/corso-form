@@ -3,6 +3,8 @@ const app = express();
 const path = require('path');
 const ws = new WebSocket("ws://192.168.7.254/ws");
 const fs = require('fs');
+const nodemailer = require("nodemailer");
+const multer = require('multer');
 
 // APIs
 
@@ -81,3 +83,14 @@ function historyFs(wsData) {
         fs.writeFile("history.json", JSON.stringify(array, null, 2), "utf8", () => {});
     })
 }
+
+// Email send
+
+const upload = multer();
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.post('/email-contact', upload.none(), (req, res) => {
+    console.log(req.body);
+    res.send("Email sent");
+})

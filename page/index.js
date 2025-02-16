@@ -210,8 +210,6 @@ stopRealtimeBtn.addEventListener("click", () => {
     stopRealtime();
 })
 
-
-
 // history call
 
 async function callHistory() {
@@ -244,3 +242,30 @@ async function callHistory() {
 function displayHistory (array) {
     return array.map(item => `<li>Temperatura: ${item.temperature}°, Umidità: ${item.humidity}%, Pressione: ${item.pressure} hPA, Data: ${item.time}</li>`).join("");
 }
+
+// Contact form
+
+const form = document.getElementById("contact-form");
+
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    let formData = new FormData(form);
+
+    try {
+        let response = await fetch('/email-contact', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok){
+            form.reset();
+            alert('Messaggio inviato correttamente! Grazie per avermi contattato.');
+        } else {
+            throw new Error(response.statusText);
+        }
+    } catch (error) {
+        console.error(error);
+        alert("Ops! C'è stato un errore durante l'invio del form, riprova più tardi.");
+    }
+})
