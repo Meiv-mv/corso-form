@@ -11,8 +11,6 @@ const upload = multer();
 require('dotenv').config();
 
 
-// APIs
-
 app.use(express.static('page'));
 
 // GET
@@ -23,7 +21,7 @@ app.get('/', function (req, res) {
 
 // Realtime API
 app.get('/realtime', async (req, res) => {
-    let realtimeFile = JSON.parse(await readRealtime());
+    let realtimeFile = await JSON.parse(fs.readFileSync('realtime.txt', 'utf8'));
     const data = {
         realtime: realtimeFile
     };
@@ -33,7 +31,7 @@ app.get('/realtime', async (req, res) => {
 
 // History API
 app.get('/history', async (req, res) => {
-    let historyFile = JSON.parse(await readHistory());
+    let historyFile = await JSON.parse(fs.readFileSync('history.json', 'utf8'));
     const data = {
         history : historyFile
     };
@@ -60,15 +58,7 @@ ws.onmessage = async (event) => {
     historyFs(obj);
 }
 
-async function readRealtime() {
-    let file = fs.readFileSync('realtime.txt', 'utf8');
-    return file
-}
-
-async function readHistory() {
-    let file = fs.readFileSync('history.json', 'utf8');
-    return file
-}
+// WebSocket FS
 
 function realtimeFs (wsData) {
     fs.writeFile("realtime.txt", wsData, "utf8", () => {})
@@ -132,4 +122,54 @@ app.post('/email-contact', upload.none(), (req, res) => {
     })
 
     res.send("Email sent");
+})
+
+// Hobby "database" method
+
+// add hobby
+app.post("/new-hobby", async (req, res) => {
+    let newHobby =  await req.body;
+    fs.readFile("hobby.json", "utf8", (err, data) => {
+        let array = JSON.parse(data);
+        array.push(newHobby);
+
+        fs.writeFile("hobby.json", JSON.stringify(array, null, 2), "utf8", () => {});
+    })
+})
+
+// delete hobby
+app.delete("/delete-hobby/:name", async (req, res) => {
+    let file = await req.params.name;
+    fs.readFile("hobby.json", "utf8", (err, data) => {
+        let array = JSON.parse(data);
+        array = array.filter(item => item.hobby !== file);
+
+        fs.writeFile("hobby.json", JSON.stringify(array, null, 2), "utf8", () => {});
+    })
+})
+
+// edit hobby list
+app.put("/edit-hobby/:name", async (req, res) => {
+    let oldHobby = await req.params.name;
+    let newHobby = await req.body;
+    fs.readFile("hobby.json", "utf8", (err, data) => {
+        let array = JSON.parse(data);
+        let newArray = array.filter(item => item.hobby === oldHobby);
+        array = array.filter(item => item.hobby !== oldHobby);
+
+        newArray.forEach(item => {
+            item.hobby = newHobby.hobby;
+            item.esperienza = newHobby.esperienza;
+            array.push(item);
+        })
+
+        fs.writeFile("hobby.json", JSON.stringify(array, null, 2), "utf8", () => {});
+    })
+})
+
+
+// get hobby list
+app.get("/hobby-list", async (req, res) => {
+    let file = await JSON.parse(fs.readFileSync("hobby.json", "utf8"));
+    res.send(file);
 })
