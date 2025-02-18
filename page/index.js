@@ -15,25 +15,100 @@ const gridOptions = {
         {hobby: "Programmare", esperienza: "Base"}
     ],
     columnDefs: [
-        {field: "hobby", editable: true, filter: true, flex: 3},
-        {field: "esperienza", editable: true, filter: true, flex: 2},
+        {field: "hobby", filter: true, flex: 3, resizable: false},
+        {field: "esperienza", filter: true, flex: 2, resizable: false},
         {field: "",
             cellRenderer: function (params) {
-                let btn = document.createElement("button");
-                btn.innerHTML = "X";
-                btn.classList.add("btn");
-                btn.classList.add("btn-danger");
-                btn.classList.add("rounded-circle");
+                // btn container
+                let div = document.createElement("div");
+                div.classList.add("grid-btn-container");
 
-                btn.addEventListener("click", function (e) {
-                    deleteRow(params);
+                // edit btn
+                let editBtn = document.createElement("button");
+                editBtn.innerHTML = `<img src="img/edit-icon.svg" alt="edit hobby icon">`;
+                editBtn.classList.add("btn");
+                editBtn.classList.add("btn-success");
+                editBtn.classList.add("rounded-circle");
+
+                editBtn.addEventListener("click", () => {
+                    const modal = document.createElement("div");
+                    modal.classList.add("modal");
+                    modal.setAttribute("tabindex", "-1");
+                    modal.setAttribute("id", "hobby-editing");
+                    modal.innerHTML = `
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title">Modifica</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="removeModal('hobby-editing')"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row g-3">
+                                    <div class="col-8 form-floating">
+                                        <input class="form-control" type="text" name="hobby-edit" id="hobby-edit" value="${params.node.data.hobby}">
+                                        <label for="hobby-edit" class="floating-label" style="color: rgb(33, 37, 41);">Hobby</label>
+                                    </div>
+                                    <div class="col-8 form-floating">
+                                        <input class="form-control" type="text" name="exp-edit" id="exp-edit" value="${params.node.data.esperienza}">
+                                        <label for="exp-edit" class="floating-label" style="color: rgb(33, 37, 41);">Esperienza</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">                 
+                                <button type="button" class="btn btn-primary" id="save-btn" data-bs-dismiss="modal">Salva</button>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+
+                    document.body.appendChild(modal)
+                    let bootstrapModal = new bootstrap.Modal(modal);
+                    bootstrapModal.show();
+
+                    // save btn
+                    const saveBtn = document.getElementById("save-btn");
+                    saveBtn.addEventListener("click", () => {
+                        let newInput = document.getElementById("hobby-edit");
+                        let newExp = document.getElementById("exp-edit");
+
+                        if (newInput.value !== "") {
+                            params.node.data.hobby = newInput.value;
+                        }
+
+                        if (newExp.value !== "") {
+                            params.node.data.esperienza = newExp.value;
+                        }
+
+                        removeModal("hobby-editing");
+                        gridOptions.api.refreshCells();
+                    })
                 })
 
-                return btn;
+
+                // delete btn
+                let deleteBtn = document.createElement("button");
+                deleteBtn.innerHTML = "X";
+                deleteBtn.classList.add("btn");
+                deleteBtn.classList.add("btn-danger");
+                deleteBtn.classList.add("rounded-circle");
+
+                deleteBtn.addEventListener("click",  () => {
+                    gridOptions.rowData = gridOptions.rowData.filter(row => Object.keys(row).some(key => row[key] !== params.node.data[key]));
+
+                    gridOptions.api.applyTransaction({
+                        remove: [params.node.data]
+                    });
+                })
+
+                div.appendChild(editBtn);
+                div.appendChild(deleteBtn);
+                return div;
             },
-            flex: 1
+            flex: 1,
+            resizable: false
         }
     ],
+    // theme: myTheme,
     onGridReady: (params) => {
         gridOptions.api = params.api;
     },
@@ -76,11 +151,7 @@ hobbiesBtn.addEventListener("click", (e) => {
 
 // Delete the row
 function deleteRow(params){
-    gridOptions.rowData = gridOptions.rowData.filter(row => Object.keys(row).some(key => row[key] !== params.node.data[key]));
 
-    gridOptions.api.applyTransaction({
-        remove: [params.node.data]
-    });
 }
 
 // Weather Section
@@ -218,18 +289,19 @@ async function callHistory() {
     const modal = document.createElement("div");
     modal.classList.add("modal");
     modal.setAttribute("tabindex", "-1");
+    modal.setAttribute("id", "history-log")
     modal.innerHTML = `
     <div class="modal-dialog">
         <div class="modal-content bg-dark text-white">
             <div class="modal-header border-secondary">
-                <h5 class="modal-title">Storico</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h1 class="modal-title">Storico</h1>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" onclick="removeModal('history-log')"></button>
             </div>
             <div class="modal-body">
                 <ul> ${displayHistory(json.history)} </ul>
             </div>
             <div class="modal-footer border-secondary">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="removeModal('history-log')" ">Close</button>
             </div>
         </div>
     </div>`;
@@ -237,6 +309,12 @@ async function callHistory() {
     document.body.appendChild(modal)
     let bootstrapModal = new bootstrap.Modal(modal);
     bootstrapModal.show();
+}
+
+// remove modal function
+function removeModal(modalId){
+    let modalToRemove = document.getElementById(`${modalId}`);
+    modalToRemove.remove();
 }
 
 function displayHistory (array) {

@@ -15,8 +15,36 @@
 #myGrid .btn{
     width: 30px;
     height: 30px;
-    font-size: 10px;
+    font-size: 12px;
     padding: 0;
+}
+
+#myGrid .btn img{
+    width: 20px;
+    height: 20px;
+}
+
+.grid-btn-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    gap: 5px;
+}
+
+.ag-root-wrapper,
+.ag-row{
+    background-color: #0C0C0D;
+    color: #BBBEC9;
+    font-family: inherit;
+}
+
+.ag-header{
+    background-color: #182226;
+    color: #FFFFFF;
+    font-family: inherit;
+    border-radius: 0;
 }
 
 @media (min-width: 992px) {
