@@ -9,11 +9,7 @@ const hobbiesBtn = document.getElementById("hobbies-btn");
 // AG-Grid
 
 const gridOptions = {
-    rowData:[
-        {hobby: "Suonare la chitarra", esperienza: "Eccellente"},
-        {hobby: "Cucinare", esperienza: "Buona"},
-        {hobby: "Programmare", esperienza: "Base"}
-    ],
+    rowData:[],
     columnDefs: [
         {field: "hobby", filter: true, flex: 3, resizable: false},
         {field: "esperienza", filter: true, flex: 2, resizable: false},
@@ -70,6 +66,7 @@ const gridOptions = {
                     saveBtn.addEventListener("click", () => {
                         let newInput = document.getElementById("hobby-edit");
                         let newExp = document.getElementById("exp-edit");
+                        let oldHobbyName = params.node.data.hobby;
 
                         if (newInput.value !== "") {
                             params.node.data.hobby = newInput.value;
@@ -78,7 +75,12 @@ const gridOptions = {
                         if (newExp.value !== "") {
                             params.node.data.esperienza = newExp.value;
                         }
+                        let newHobby = {
+                            hobby: params.node.data.hobby,
+                            esperienza: params.node.data.esperienza
+                        }
 
+                        editHobby(oldHobbyName, newHobby);
                         removeModal("hobby-editing");
                         gridOptions.api.refreshCells();
                     })
@@ -95,6 +97,7 @@ const gridOptions = {
                 deleteBtn.addEventListener("click",  () => {
                     gridOptions.rowData = gridOptions.rowData.filter(row => Object.keys(row).some(key => row[key] !== params.node.data[key]));
 
+                    deleteHobby(params.node.data.hobby);
                     gridOptions.api.applyTransaction({
                         remove: [params.node.data]
                     });
@@ -108,7 +111,6 @@ const gridOptions = {
             resizable: false
         }
     ],
-    // theme: myTheme,
     onGridReady: (params) => {
         gridOptions.api = params.api;
     },
@@ -117,8 +119,53 @@ const gridOptions = {
     }
 }
 
-const myGridElement = document.querySelector('#myGrid');
-agGrid.createGrid(myGridElement, gridOptions);
+// Hobby APIs Calls
+
+// GET - Initial Grid
+document.addEventListener('DOMContentLoaded', async () => {
+    const response = await fetch("http://localhost:3000/hobby-list");
+    const json = await response.json();
+    let array = []
+    json.forEach(item => {
+        array.push(item);
+    })
+
+    gridOptions.rowData = array;
+    const myGridElement = document.querySelector('#myGrid');
+    agGrid.createGrid(myGridElement, gridOptions);
+})
+
+// POST - Add Hobby
+async function addHobby(newHobby){
+    const response = await fetch("http://localhost:3000/new-hobby", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newHobby)
+    })
+}
+
+// DELETE - Delete Hobby
+async function deleteHobby(deleteItem){
+    const response = await fetch(`http://localhost:3000/delete-hobby/${encodeURIComponent(deleteItem)}`, {
+        method: 'DELETE'
+    })
+}
+
+// PUT - Edit Hobby
+async function editHobby(oldHobby, newHobby){
+    const response = await fetch(`http://localhost:3000/edit-hobby/${encodeURIComponent(oldHobby)}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newHobby)
+    })
+}
+
+
+
 
 // Hobby Event Section
 
@@ -142,6 +189,7 @@ hobbiesBtn.addEventListener("click", (e) => {
     }
 
     let newHobby = {hobby: inputBar.value, esperienza: expValue}
+    addHobby({hobby: inputBar.value, esperienza: expValue});
     gridOptions.rowData.push({hobby: inputBar.value, esperienza: expValue});
     gridOptions.api.applyTransaction({ add: [newHobby] });
 
