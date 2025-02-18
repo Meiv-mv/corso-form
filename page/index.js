@@ -134,7 +134,7 @@ async function searchWeather() {
                 weatherDescription.innerHTML = `Meteo: ${json.weather[0].description}`;
             }, 500)
 
-            updateMap(json.coord.lat, json.coord.lon, city)
+            updateMap(json.coord.lat, json.coord.lon, json.name)
         }
     } catch (err){
         errorBox.style.display = "block";

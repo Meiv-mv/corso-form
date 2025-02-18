@@ -5,10 +5,14 @@ const ws = new WebSocket("ws://192.168.7.254/ws");
 const fs = require('fs');
 const nodemailer = require("nodemailer");
 const multer = require('multer');
+const transporter = require("nodemailer/lib/mailer");
+const {request} = require("express");
+const upload = multer();
+require('dotenv').config();
+
 
 // APIs
 
-// app.use(express.json());
 app.use(express.static('page'));
 
 // GET
@@ -71,9 +75,6 @@ function realtimeFs (wsData) {
 }
 
 function historyFs(wsData) {
-    // let file = `${wsData} \n`
-    //
-    // fs.appendFile("history.txt", file, "utf8", () => {})
     fs.readFile("history.json", "utf8", (err, data) => {
         let array = JSON.parse(data);
         array.push(wsData);
@@ -86,11 +87,49 @@ function historyFs(wsData) {
 
 // Email send
 
-const upload = multer();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.post('/email-contact', upload.none(), (req, res) => {
-    console.log(req.body);
+
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: "programma.meiv@gmail.com",
+            pass: process.env.GOOGLE_APP_PASS
+        }
+    })
+
+
+
+    // const transporter = nodemailer.createTransport({
+    //     service: 'gmail',
+    //     auth: {
+    //         type: "OAuth2",
+    //         user: "programma.meiv@gmail.com",
+    //         clientId: "",
+    //         clientSecret: "",
+    //         refreshToken: ""
+    //     }
+    // })
+
+    // L'email risulta mandata da me per me, ma se rispondo in teoria dovrebbe farmi rispondere all'email dell'utente
+    // Qualcosa mi sono perso lungo il settaggio del controllo OAuth2 che è molto più sicuro che genrare una password per app
+
+    let message = {
+        from: 'programma.meiv@gmail.com',
+        replyTo: req.body.email,
+        to: "programma.meiv@gmail.com",
+        subject: `${req.body.subject}`,
+        text: JSON.stringify(req.body.message)
+    }
+
+    transporter.sendMail(message, (err, info) => {
+        if (err) {
+            return console.log(err);
+        }
+        console.log("Email sent:" + info.response);
+    })
+
     res.send("Email sent");
 })
